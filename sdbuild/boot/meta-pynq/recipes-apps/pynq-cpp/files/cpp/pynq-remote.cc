@@ -26,11 +26,13 @@
 #include <mmio.grpc.pb.h>
 #include <buffer.grpc.pb.h>
 #include <gpio.grpc.pb.h>
+#include <interrupt.grpc.pb.h>
 
 #include "buffer.cc"
 #include "mmio.h"
 #include "device.h"
 #include "gpio.h"
+#include "interrupt.h"
 
 #include <xrt/xclhal2.h>
 #include <xrt/xrt.h>
@@ -98,6 +100,12 @@ using gpio::GetGpioBasePathResponse;
 using gpio::GetGpioNPinsRequest;
 using gpio::GetGpioNPinsResponse;
 using gpio::Gpio;
+using interrupt::RegisterRequest;
+using interrupt::RegisterResponse;
+using interrupt::WaitRequest;
+using interrupt::WaitResponse;
+using interrupt::ReleaseRequest;
+using interrupt::ReleaseResponse;
 
 #define DEBUG
 
@@ -866,6 +874,7 @@ private:
 
 public:
     std::string device_name = "";
+    InterruptImpl *interrupt_service_ = nullptr;
     /**
      * @brief Constructor for RemoteDeviceImpl.
      * Checks if the /lib/firmware/ directory exists and creates it if it does not.
@@ -913,6 +922,11 @@ public:
         }
         file.close();
         remote_device_.download(remote_device_.get_bitstream_attrs().first);
+
+        if (interrupt_service_)
+        {
+            interrupt_service_->invalidate_all_internal();
+        }
 
         return grpc::Status::OK;
     }
@@ -1018,7 +1032,9 @@ void RunServer(uint16_t port)
     MMIOImpl mmio_service;                  // Create MMIO rpc handler
     BufferImpl buffer_service;              // Create Buffer rpc handler
     GPIOImpl gpio_service;                  // Create Gpio rpc handler
+    InterruptImpl interrupt_service;          // Create Interrupt rpc handler
     remote_device_service.device_name = buffer_service.device_name;
+    remote_device_service.interrupt_service_ = &interrupt_service;
 
     grpc::EnableDefaultHealthCheckService(true);
     grpc::reflection::InitProtoReflectionServerBuilderPlugin();
@@ -1028,6 +1044,7 @@ void RunServer(uint16_t port)
     builder.RegisterService(&mmio_service);
     builder.RegisterService(&buffer_service);
     builder.RegisterService(&gpio_service);
+    builder.RegisterService(&interrupt_service);
 
     std::unique_ptr<Server> server(builder.BuildAndStart());
     std::cout << "Server listening on " << server_address << std::endl;
