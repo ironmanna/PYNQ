@@ -1,0 +1,6 @@
+Welcome to PYNQ.remote -- log in as 'xilinx' (default password: 'xilinx').
+For your security, change the password with `passwd` after first login.
+
+Network: static 192.168.2.99 on eth0, plus DHCP if a server is available.
+For multi-board labs, enable auto-IP claim:
+    sudo systemctl enable --now pynq-network-autoip

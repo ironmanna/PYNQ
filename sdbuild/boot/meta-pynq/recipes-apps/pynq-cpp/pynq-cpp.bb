@@ -5,6 +5,10 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 DEPENDS = "protobuf grpc protobuf-native grpc-native xrt"
 
+# Pull in the static + DHCP eth0 config so pynq-remote is reachable at
+# 192.168.2.99 out of the box (mirrors classic PYNQ's ethernet package).
+RDEPENDS:${PN} += "pynq-network"
+
 SRC_URI = "file://cpp/CMakeLists.txt \
            file://cpp/pynq-remote.cc \
            file://cpp/device.cc \
