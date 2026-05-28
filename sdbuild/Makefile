@@ -207,8 +207,10 @@ $$(PL_PROJ_$1): $$(BSP_TARGET_$1)
 	if [ $(PYNQREMOTE) = 1 ]; then \
 		echo 'CONFIG_grpc' >> $$(PL_USER_ROOTFS_CONFIG_$1) ;\
 		echo 'CONFIG_pynq-cpp' >> $$(PL_USER_ROOTFS_CONFIG_$1) ;\
+		echo 'CONFIG_pynq-network' >> $$(PL_USER_ROOTFS_CONFIG_$1) ;\
 		echo 'CONFIG_grpc=y' >> $$(PL_ROOTFS_CONFIG_$1) ;\
 		echo 'CONFIG_pynq-cpp=y' >> $$(PL_ROOTFS_CONFIG_$1) ;\
+		echo 'CONFIG_pynq-network=y' >> $$(PL_ROOTFS_CONFIG_$1) ;\
 		echo 'CONFIG_nfs-utils=n' >> $$(PL_ROOTFS_CONFIG_$1) ;\
 		echo 'CONFIG_tcf-agent=n' >> $$(PL_ROOTFS_CONFIG_$1) ;\
 		echo 'CONFIG_imagefeature-ssh-server-openssh=n' >> $$(PL_ROOTFS_CONFIG_$1) ;\

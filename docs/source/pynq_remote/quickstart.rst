@@ -42,13 +42,44 @@ Step 2: Prepare and Boot the Target Device
 * Create a PYNQ.remote image using the instructions in :doc:`image_build`.
 * Flash the image to your SD card (see :doc:`../appendix/sdcard` for instructions on how to flash the image).
 * Insert the SD card and power on the device (make sure it is connected to your network).
-* Wait for the device to boot up. You can check the device's IP address using a serial console (e.g. `minicom <https://help.ubuntu.com/community/Minicom>`_ or `PuTTY <https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html>`_) or by checking your router's DHCP client list. 
+* Wait for the device to boot up. You can check the device's IP address using a serial console (e.g. `minicom <https://help.ubuntu.com/community/Minicom>`_ or `PuTTY <https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html>`_) or by checking your router's DHCP client list.
 
-Be aware that the default login credentials have changed with Petalinux. The username is `petalinux`. On first boot, you will be prompted to set a new password.
+Default credentials
+~~~~~~~~~~~~~~~~~~~
+
+PYNQ.remote images ship with a pre-created user account so you can SSH in
+immediately after flashing:
+
+* **Username:** ``xilinx``
+* **Password:** ``xilinx``
+
+The ``xilinx`` user is a member of the ``sudo`` group, so ``sudo`` works with
+its password. The root account is unchanged from the PetaLinux defaults
+(disabled login).
+
+.. warning::
+
+   These credentials are well-known and convenient for lab use only. **Change
+   the password after first login** with ``passwd``, and do not expose a
+   PYNQ.remote board directly to an untrusted network with the defaults in
+   place.
 
 .. note::
 
     Your board must be connected to the same network as your host machine. If you are using a direct connection, you may need to set a static IP address on both the host and the target device.
+
+Auto-IP and multi-board setups
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default the image tries to claim ``192.168.2.99/24`` on ``eth0``. When more than one PYNQ.remote board is plugged into the same Ethernet segment, a boot-time helper (``pynq-network-autoip``) probes the wire with ARP duplicate-address detection and falls back to the next free address in ``192.168.2.99`` ... ``192.168.2.110``. The chosen address is logged to the serial console, written to ``/etc/motd`` (so you see it on first SSH/serial login), and stored in ``/var/lib/pynq-network/assigned-ip`` so the board keeps the same identity across reboots.
+
+If you want to pin a board to a specific address (or disable auto-IP entirely), edit ``/etc/systemd/network/10-eth0.network`` and mask the helper:
+
+.. code-block:: bash
+
+   sudo systemctl mask pynq-network-autoip.service
+   sudo rm -f /var/lib/pynq-network/assigned-ip
+   sudo systemctl restart systemd-networkd
 
 Step 3: Install and Run PYNQ-HelloWorld
 ---------------------------------------

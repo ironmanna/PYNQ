@@ -11,6 +11,10 @@ DEPENDS = "protobuf grpc protobuf-native grpc-native xrt"
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[rfsoc] = "-DRFSOC=ON,-DRFSOC=OFF,rfdc libmetal,rfdc libmetal"
 
+# Pull in the static + DHCP eth0 config so pynq-remote is reachable at
+# 192.168.2.99 out of the box (mirrors classic PYNQ's ethernet package).
+RDEPENDS:${PN} += "pynq-network"
+
 SRC_URI = "file://cpp/CMakeLists.txt \
            file://cpp/pynq-remote.cc \
            file://cpp/device.cc \

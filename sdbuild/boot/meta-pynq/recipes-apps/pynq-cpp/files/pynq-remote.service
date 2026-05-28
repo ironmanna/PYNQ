@@ -1,6 +1,7 @@
 [Unit]
 Description=PYNQ Remote Server Application
-After=network.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 ExecStart=/usr/bin/pynq-remote
