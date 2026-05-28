@@ -128,3 +128,30 @@ class StreamSwitch(DefaultIP):
         for idx, offset in _mux_mi_gen(self.max_slots):
             self.write(offset, int(self._mi[idx]))
         self.write(self._control_reg, self._reg_update)
+
+    def sel(self, mst=0, slv=0):
+        """Connect a master interface to a slave interface
+
+        Compatibility method for old interface.
+        Disables all master ports first, then enables only the target port,
+        matching old behavior to avoid conflicts.
+
+        Parameters
+        ----------
+        mst : int
+            Master interface index
+        slv : int
+            Slave interface index
+        """
+        # Disable register update while reconfiguring
+        self.write(self._control_reg, 0)
+        # Disable all master ports (0x80000000 = disabled flag)
+        for i in range(self.max_slots):
+            self.write(_mi_offset + 4 * i, int(_mi_disable))
+        # Enable only the target master port
+        self.write(_mi_offset + 4 * mst, slv)
+        # Update _mi to reflect current state
+        self._mi[:] = _mi_disable
+        self._mi[mst] = slv
+        # Commit the routing
+        self.write(self._control_reg, self._reg_update)

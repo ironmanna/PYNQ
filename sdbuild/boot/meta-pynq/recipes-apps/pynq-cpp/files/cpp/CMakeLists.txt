@@ -93,18 +93,6 @@ if(RFSOC)
 endif()
 
 message(STATUS "CMAKE CURRENT DIR = ${CMAKE_CURRENT_SOURCE_DIR}")
-# Change to whatever the Petalinux project path - will need to change this at some point
-
-# Navigate up the directory hierarchy to find the project root
-get_filename_component(BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}" DIRECTORY)
-get_filename_component(BASE_DIR "${BASE_DIR}" DIRECTORY)
-get_filename_component(BASE_DIR "${BASE_DIR}" DIRECTORY)
-get_filename_component(BASE_DIR "${BASE_DIR}" DIRECTORY)
-get_filename_component(BASE_DIR "${BASE_DIR}" DIRECTORY)
-get_filename_component(BASE_DIR "${BASE_DIR}" DIRECTORY)
-get_filename_component(BASE_DIR "${BASE_DIR}" DIRECTORY)
-
-message(STATUS "BASE_DIR (Project Path) = ${BASE_DIR}")
 
 # Build libmetal — only required by rfdc (RFSoC services)
 if(RFSOC)
@@ -142,13 +130,10 @@ if(USE_LOCAL_XRT)
     set(XRT_LIBRARIES "/usr/lib/libxrt_core.so")
     set(XRT_ADDITIONAL_LIBRARIES "/usr/lib/libxrt_coreutil.so")
 else()
-    # Hard code default XRT paths
-    # Explicitly set the paths for XRT
-    set(XRT_INCLUDE_DIRS "${BASE_DIR}/build/tmp/sysroots-components/cortexa72-cortexa53/xrt/usr/include")
-    set(XRT_LIBRARIES "${BASE_DIR}/build/tmp/sysroots-components/cortexa72-cortexa53/xrt/usr/lib/libxrt_core.so")
-
-    # Additional XRT libraries (if needed)
-    set(XRT_ADDITIONAL_LIBRARIES "${BASE_DIR}/build/tmp/sysroots-components/cortexa72-cortexa53/xrt/usr/lib/libxrt_coreutil.so")
+    # Use sysroot provided by BitBake cross-compilation
+    set(XRT_INCLUDE_DIRS "${CMAKE_SYSROOT}/usr/include")
+    set(XRT_LIBRARIES "${CMAKE_SYSROOT}/usr/lib/libxrt_core.so")
+    set(XRT_ADDITIONAL_LIBRARIES "${CMAKE_SYSROOT}/usr/lib/libxrt_coreutil.so")
 endif()
 
 if(EXISTS "${XRT_INCLUDE_DIRS}/xrt/xrt.h" AND EXISTS "${XRT_LIBRARIES}")
