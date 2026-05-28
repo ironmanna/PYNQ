@@ -1068,7 +1068,6 @@ int XrfdcRemote::SetQMCSettings(u32 tile_type, u32 tile_id, u32 block_id,
 
     c_settings.EnablePhase = settings.enable_phase() ? 1 : 0;
     c_settings.EnableGain = settings.enable_gain() ? 1 : 0;
-    c_settings.EnableOffsetCorr = settings.enable_offset_corr() ? 1 : 0;
     c_settings.GainCorrectionFactor = settings.gain_correction_factor();
     c_settings.PhaseCorrectionFactor = settings.phase_correction_factor();
     c_settings.OffsetCorrectionFactor = settings.offset_correction_factor();
@@ -1108,7 +1107,6 @@ int XrfdcRemote::GetQMCSettings(u32 tile_type, u32 tile_id, u32 block_id,
     if (status == XRFDC_SUCCESS) {
         settings->set_enable_phase(c_settings.EnablePhase != 0);
         settings->set_enable_gain(c_settings.EnableGain != 0);
-        settings->set_enable_offset_corr(c_settings.EnableOffsetCorr != 0);
         settings->set_gain_correction_factor(c_settings.GainCorrectionFactor);
         settings->set_phase_correction_factor(c_settings.PhaseCorrectionFactor);
         settings->set_offset_correction_factor(c_settings.OffsetCorrectionFactor);
@@ -3632,9 +3630,6 @@ grpc::Status XrfdcImpl::GetFIFOStatusObs(ServerContext* context,
             );
 
             response->set_enable(enable != 0);
-            response->set_count(enable ? 1 : 0);
-            response->set_overflow(false);
-            response->set_underflow(false);
             return grpc::Status::OK;
         } catch (const std::exception& e) {
             auto* status = response->mutable_status();
