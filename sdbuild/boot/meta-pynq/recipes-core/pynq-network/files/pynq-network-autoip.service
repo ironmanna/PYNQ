@@ -1,0 +1,25 @@
+[Unit]
+Description=PYNQ auto-pick non-conflicting static IP for eth0
+Documentation=man:systemd-networkd(8)
+# Must run before networkd configures interfaces, but after udev has named
+# them. sys-subsystem-net-devices-eth0.device fires as soon as the kernel
+# enumerates the NIC.
+After=sys-subsystem-net-devices-eth0.device
+Wants=sys-subsystem-net-devices-eth0.device
+Before=systemd-networkd.service
+DefaultDependencies=no
+ConditionPathExists=/sys/class/net/eth0
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/pynq-network-autoip
+StandardOutput=journal
+StandardError=journal
+# Script handles its own errors and always exits 0 except on bash failures.
+TimeoutStartSec=30
+
+[Install]
+# Pull us in whenever the network stack is wanted. systemd-networkd's own
+# WantedBy=network.target target means we'll be ordered correctly.
+WantedBy=network-pre.target
