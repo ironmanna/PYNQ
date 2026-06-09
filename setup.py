@@ -22,6 +22,7 @@ required = [
     'pynqutils',
     "setuptools>=24.2.0",
     "cffi",
+    "pycparser<3",
     "numpy<2.0",
     "nest_asyncio",
     'grpcio==1.64.0',
