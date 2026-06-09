@@ -1,7 +1,7 @@
 pynq.lib Package
 ================
 
-pynq.lib contains the arduino, pmod, and logictools subpackages, and additional
+pynq.lib contains the arduino and pmod subpackages, and additional
 modules for communicating with other controllers in an overlay.
 
 Modules:
@@ -21,7 +21,6 @@ Modules:
 Subpackages:
   * :ref:`pynq-lib-arduino`- Implements driver for Arduino IO Processor Subsystem
   * :ref:`pynq-lib-pmod` - Implements driver for PMOD IO Processor Subsystem
-  * :ref:`pynq-lib-logictools` - Implements driver for Logictools IP Processor Subsystem
   * :ref:`pynq-lib-rpi` - Implements driver for Raspberry Pi IO Processor Subsystem
 
 .. toctree::
@@ -35,7 +34,6 @@ Subpackages:
     pynq.lib/pynq.lib.dma
     pynq.lib/pynq.lib.iic
     pynq.lib/pynq.lib.led
-    pynq.lib/pynq.lib.logictools
     pynq.lib/pynq.lib.pmod
     pynq.lib/pynq.lib.pynqmicroblaze
     pynq.lib/pynq.lib.rgbled

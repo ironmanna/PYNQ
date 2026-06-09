@@ -67,7 +67,6 @@ Supported IP
     pynq_libraries/axiiic.rst
     pynq_libraries/debugbridge.rst
     pynq_libraries/dma.rst
-    pynq_libraries/logictools.rst
     pynq_libraries/video.rst
 
 PYNQ IOPs

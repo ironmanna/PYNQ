@@ -103,7 +103,6 @@ extend_pynq_package(
         "pynq/lib/arduino",
         "pynq/lib/pmod",
         "pynq/lib/rpi",
-        "pynq/lib/logictools",
         "pynq/pl_server/default.xclbin",
     ]
 )

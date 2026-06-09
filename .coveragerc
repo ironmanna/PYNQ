@@ -4,7 +4,6 @@ branch = True
 [report]
 omit =
     pynq/lib/arduino/*
-    pynq/lib/logictools/*
     pynq/lib/pmod/*
     pynq/lib/pybind11/*
     pynq/lib/pynqmicroblaze/*
