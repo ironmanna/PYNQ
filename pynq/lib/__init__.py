@@ -41,13 +41,6 @@ from .pmod import Pmod_Cable
 from .pmod import Pmod_Timer
 from .pmod import Pmod_PWM
 
-from .logictools import LogicToolsController
-from .logictools import Waveform
-from .logictools import BooleanGenerator
-from .logictools import PatternGenerator
-from .logictools import TraceAnalyzer
-from .logictools import FSMGenerator
-
 from . import video
 from . import audio
 from . import dma
