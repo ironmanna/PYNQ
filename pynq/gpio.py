@@ -4,7 +4,7 @@
 import os
 import warnings
 import weakref
-from .ps import CPU_ARCH, ZU_ARCH, ZYNQ_ARCH
+from .ps import CPU_ARCH, ZU_ARCH
 
 
 class _GPIO:
@@ -134,14 +134,11 @@ class GPIO:
 
     """
 
-    if CPU_ARCH == ZYNQ_ARCH:
-        _GPIO_MIN_USER_PIN = 54
-    elif CPU_ARCH == ZU_ARCH:
+    if CPU_ARCH == ZU_ARCH:
         _GPIO_MIN_USER_PIN = 78
     else:
         warnings.warn("Pynq does not support the CPU Architecture: {}"
                       .format(CPU_ARCH), ResourceWarning)
-
 
     def __init__(self, gpio_index, direction):
         """Return a new GPIO object.
@@ -243,7 +240,6 @@ class GPIO:
             valid_labels.append(target_label)
         else:
             valid_labels.append('zynqmp_gpio')
-            valid_labels.append('zynq_gpio')
 
         for root, dirs, files in os.walk('/sys/class/gpio'):
             for name in dirs:

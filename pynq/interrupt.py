@@ -6,7 +6,6 @@ import asyncio
 import weakref
 import warnings
 from .pl import PL
-from .ps import CPU_ARCH, ZU_ARCH, ZYNQ_ARCH
 from .mmio import MMIO
 from .uio import get_uio_device, UioController
 

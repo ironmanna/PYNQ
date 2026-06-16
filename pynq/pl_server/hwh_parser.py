@@ -7,7 +7,7 @@ import re
 from copy import deepcopy
 from xml.etree import ElementTree
 
-from pynq.ps import CPU_ARCH, CPU_ARCH_IS_SUPPORTED, ZU_ARCH, ZYNQ_ARCH
+from pynq.ps import CPU_ARCH, CPU_ARCH_IS_SUPPORTED, ZU_ARCH
 
 
 
@@ -542,62 +542,6 @@ class _HWHABC(metaclass=abc.ABCMeta):
                 )
 
 
-class _HWHZynq(_HWHABC):
-    """Helper Class to extract information from a HWH configuration file
-
-    This class works for the Zynq devices.
-
-    """
-
-    family_ps = "processing_system7"
-    family_irq = {"IRQ_F2P": ((61, 8), (84, 8))}
-    family_gpio = "GPIO_O"
-
-    def find_clock_divisor(self, mod, clk_id, div_id):
-        """Return the clock divisor for the given clock ID.
-
-        Parameters
-        ----------
-        mod : Element
-            The current XML element under parsing.
-        clk_id : int
-            The ID of the PL clock, can be 0 - 3.
-        div_id : int
-            The ID of the clock divisor, can be 0 - 1.
-
-        Returns
-        -------
-        int
-            The clock divisor value in decimal.
-
-        """
-        clk_odiv = "PCW_FCLK{0}_PERIPHERAL_DIVISOR{1}".format(clk_id, div_id)
-        return int(
-            mod.find("./PARAMETERS/*[@NAME='{0}']".format(clk_odiv)).get("VALUE")
-        )
-
-    def find_clock_enable(self, mod, clk_id):
-        """Return the clock enable for the given clock ID.
-
-        Parameters
-        ----------
-        mod : Element
-            The current XML element under parsing.
-        clk_id : int
-            The ID of the PL clock, can be 0 - 3.
-
-        Returns
-        -------
-        int
-            The clock enable value in decimal (1 means enabled).
-
-        """
-        clk_enable = "PCW_FPGA_FCLK{0}_ENABLE".format(clk_id)
-        return int(
-            mod.find("./PARAMETERS/*[@NAME='{0}']".format(clk_enable)).get("VALUE")
-        )
-
-
 class _HWHUltrascale(_HWHABC):
     """Helper Class to extract information from a HWH configuration file
 
@@ -656,8 +600,6 @@ class _HWHUltrascale(_HWHABC):
 
 if CPU_ARCH == ZU_ARCH:
     HWH = _HWHUltrascale
-elif CPU_ARCH == ZYNQ_ARCH:
-    HWH = _HWHZynq
 else:
     HWH = _HWHABC
 

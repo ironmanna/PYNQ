@@ -6,62 +6,13 @@ import warnings
 import os
 
 
-ZYNQ_ARCH = "armv7l"
 ZU_ARCH = "aarch64"
 CPU_ARCH = platform.machine()
-CPU_ARCH_IS_SUPPORTED = CPU_ARCH in [ZYNQ_ARCH, ZU_ARCH]
+CPU_ARCH_IS_SUPPORTED = CPU_ARCH == ZU_ARCH
 CPU_ARCH_IS_x86 = CPU_ARCH in ['x86_64', 'AMD64']
 ON_TARGET = os.path.isfile('/proc/device-tree/chosen/pynq_board')
 
 DEFAULT_PL_CLK_MHZ = 100.0
-
-ZYNQ_PLL_FIELDS = {
-    'PLL_FDIV': {'access': 'read-write', 'bit_offset': 12, 'bit_width': 7,
-                 'description': 'Provide the feedback divisor for the PLL'},
-}
-
-ZYNQ_ARM_FIELDS = {
-    'DIVISOR': {'access': 'read-write', 'bit_offset': 8, 'bit_width': 6,
-                'description': 'Frequency divisor for the CPU clock'},
-    'SRCSEL': {'access': 'read-write', 'bit_offset': 4, 'bit_width': 2,
-               'description': 'Source for the CPU clock'}
-}
-
-ZYNQ_CLK_FIELDS = {
-    'DIVISOR1': {'access': 'read-write', 'bit_offset': 20, 'bit_width': 6,
-                 'description': 'Second divisor of the clock source'},
-    'DIVISOR0': {'access': 'read-write', 'bit_offset': 8, 'bit_width': 6,
-                 'description': 'First divisor of the clock source'},
-    'SRCSEL': {'access': 'read-write', 'bit_offset': 4, 'bit_width': 2,
-               'description': 'Select the source for the clock'},
-}
-
-ZYNQ_SLCR_REGISTERS = {
-    'ARM_PLL_CTRL': {'address_offset': 0x100, 'access': 'read-write',
-                     'size': 32, 'description': 'ARM PLL Control',
-                     'fields': ZYNQ_PLL_FIELDS},
-    'DDR_PLL_CTRL': {'address_offset': 0x104, 'access': 'read-write',
-                     'size': 32, 'description': 'DDR PLL Control',
-                     'fields': ZYNQ_PLL_FIELDS},
-    'IO_PLL_CTRL': {'address_offset': 0x108, 'access': 'read-write',
-                    'size': 32, 'description': 'IO PLL Control',
-                    'fields': ZYNQ_PLL_FIELDS},
-    'ARM_CLK_CTRL': {'address_offset': 0x120, 'access': 'read-write',
-                     'size': 32, 'description': 'CPU Clock Control',
-                     'fields': ZYNQ_ARM_FIELDS},
-    'FPGA0_CLK_CTRL': {'address_offset': 0x170, 'access': 'read-write',
-                       'size': 32, 'description': 'PL Clock 0 Control',
-                       'fields': ZYNQ_CLK_FIELDS},
-    'FPGA1_CLK_CTRL': {'address_offset': 0x180, 'access': 'read-write',
-                       'size': 32, 'description': 'PL Clock 1 Control',
-                       'fields': ZYNQ_CLK_FIELDS},
-    'FPGA2_CLK_CTRL': {'address_offset': 0x190, 'access': 'read-write',
-                       'size': 32, 'description': 'PL Clock 2 Control',
-                       'fields': ZYNQ_CLK_FIELDS},
-    'FPGA3_CLK_CTRL': {'address_offset': 0x1a0, 'access': 'read-write',
-                       'size': 32, 'description': 'PL Clock 3 Control',
-                       'fields': ZYNQ_CLK_FIELDS},
-}
 
 ZU_PLL_FIELDS = {
     'PRE_SRC': {'access': 'read-write', 'bit_offset': 20, 'bit_width': 3,
@@ -311,9 +262,7 @@ class _ClocksMeta(type):
                 # If device is not set, default to active device
                 from pynq.pl_server.device import Device
                 cls.device = Device.active_device
-            if cls.device.arch == ZYNQ_ARCH:
-                cls._real_instance = _ClocksZynq(device=cls.device)
-            elif cls.device.arch == ZU_ARCH:
+            if cls.device.arch == ZU_ARCH:
                 cls._real_instance = _ClocksUltrascale(device=cls.device)
             else:
                 raise RuntimeError('Architecture not supported for Clocks')
@@ -561,120 +510,6 @@ class _ClocksUltrascale(_ClocksBase):
         arm_src_pll_idx = acpu_reg.SRCSEL
         arm_clk_odiv = acpu_reg.DIVISOR0
         src_pll_reg = self.ACPU_SRC_PLL_CTRLS[arm_src_pll_idx]
-        return round(self.get_pll_mhz(src_pll_reg) / arm_clk_odiv, 6)
-
-
-class _ClocksZynq(_ClocksBase):
-    """Implementation class for all Zynq 7-Series PS and PL clocks
-    not exposed to users.
-
-    Since this is the abstract base class for all Zynq 7-Series clocks, no
-    attributes or methods are exposed to users. Users should use the class
-    `Clocks` instead.
-
-    """
-    DEFAULT_SRC_CLK_MHZ = 50.0
-    SLCR_BASE_ADDRESS = 0xF8000000
-
-    VALID_CLOCK_DIV_PRODUCTS = {i*j: (i, j)
-                                for i in range(1 << 6)
-                                for j in range(1 << 6)}
-
-    def __init__(self, ref_clk_mhz=DEFAULT_SRC_CLK_MHZ, device=None):
-        self._ref_clk_mhz = ref_clk_mhz
-
-        from .mmio import MMIO
-        self._slcr_mmio = MMIO(self.SLCR_BASE_ADDRESS, 0x200, device=device)
-
-        from .registers import RegisterMap
-        SlcrRegisters = RegisterMap.create_subclass('SL', ZYNQ_SLCR_REGISTERS)
-        self._slcr_registers = SlcrRegisters(self._slcr_mmio.array)
-
-        self.PL_CLK_CTRLS = [
-            self._slcr_registers.FPGA0_CLK_CTRL,
-            self._slcr_registers.FPGA1_CLK_CTRL,
-            self._slcr_registers.FPGA2_CLK_CTRL,
-            self._slcr_registers.FPGA3_CLK_CTRL
-        ]
-
-        self.PL_SRC_PLL_CTRLS = [
-            self._slcr_registers.IO_PLL_CTRL,
-            self._slcr_registers.IO_PLL_CTRL,
-            self._slcr_registers.ARM_PLL_CTRL,
-            self._slcr_registers.DDR_PLL_CTRL,
-        ]
-
-        self.ARM_SRC_PLL_CTRLS = [
-            self._slcr_registers.ARM_PLL_CTRL,
-            self._slcr_registers.ARM_PLL_CTRL,
-            self._slcr_registers.DDR_PLL_CTRL,
-            self._slcr_registers.IO_PLL_CTRL,
-        ]
-
-    def set_pl_clk(self, clk_idx, div0=None, div1=None,
-                   clk_mhz=DEFAULT_PL_CLK_MHZ):
-        """This method sets a PL clock frequency.
-
-        Users have to specify the index of the PL clock to be changed.
-
-        The CPU, and other source clocks, by default, should not get changed.
-
-        Users have two options:
-        1. specify the two frequency divider values directly (div0, div1), or
-        2. specify the clock rate, in which case the divider values will be
-        calculated.
-
-        Note
-        ----
-        In case `div0` and `div1` are both specified, the parameter `clk_mhz`
-        will be ignored.
-
-        Parameters
-        ----------
-        clk_idx : int
-            The index of the PL clock to be changed, from 0 to 3.
-        div0 : int
-            The first frequency divider value.
-        div1 : int
-            The second frequency divider value.
-        clk_mhz : float
-            The clock rate in MHz.
-
-        """
-        super().set_pl_clk(clk_idx, div0, div1, clk_mhz)
-
-    def get_pll_mhz(self, pll_reg):
-        """The getter method for PLL output clocks.
-
-        Parameters
-        ----------
-        pll_reg : Register
-            The control register for a PLL
-
-        Returns
-        -------
-        float
-            The PLL output clock rate measured in MHz.
-
-        """
-        pll_fbdiv = pll_reg.PLL_FDIV
-        clk_mhz = self._ref_clk_mhz * pll_fbdiv
-
-        return round(clk_mhz, 6)
-
-    def get_cpu_mhz(self):
-        """The getter method for the CPU clock.
-
-        Returns
-        -------
-        float
-            The CPU clock rate measured in MHz.
-
-        """
-        cpu_ctrl_reg = self._slcr_registers.ARM_CLK_CTRL
-        arm_src_pll_idx = cpu_ctrl_reg.SRCSEL
-        arm_clk_odiv = cpu_ctrl_reg.DIVISOR
-        src_pll_reg = self.ARM_SRC_PLL_CTRLS[arm_src_pll_idx]
         return round(self.get_pll_mhz(src_pll_reg) / arm_clk_odiv, 6)
 
 

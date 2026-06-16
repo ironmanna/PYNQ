@@ -216,7 +216,7 @@ class RemoteDevice(Device):
         Returns
         -------
         str
-            The architecture of the remote device, either "aarch64" or "armv7l"
+            The architecture of the remote device, "aarch64"
         """
         response = self.exists_file("/proc/version")
         if response.exists:
@@ -224,9 +224,10 @@ class RemoteDevice(Device):
             version_info = content.decode('utf-8').strip()
             if "aarch64" in version_info:
                 return "aarch64"
-            return "armv7l"
+            raise RuntimeError(
+                f"Unsupported architecture for remote device {self.addr}")
         else:
-            raise RuntimeError(f"Unable to obtain architecture information for {self.addr}")  
+            raise RuntimeError(f"Unable to obtain architecture information for {self.addr}")
 
     def exists_file(self, file_path):
         """Check if a file/directory exists on the remote device

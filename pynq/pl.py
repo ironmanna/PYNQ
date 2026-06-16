@@ -16,7 +16,6 @@ from .mmio import MMIO
 from .pl_server.device import Device
 from .pl_server.global_state import clear_global_state, load_global_state, global_state_file_exists
 from .pl_server.hwh_parser import HWH, get_hwh_name
-from .ps import CPU_ARCH, CPU_ARCH_IS_SUPPORTED, ZU_ARCH, ZYNQ_ARCH
 
 
 

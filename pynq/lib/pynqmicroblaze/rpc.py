@@ -15,7 +15,7 @@ import pycparser
 from pycparser import c_ast, c_generator
 from pycparser.plyparser import ParseError
 
-from pynq.ps import CPU_ARCH, ZU_ARCH, ZYNQ_ARCH
+from pynq.ps import CPU_ARCH, ZU_ARCH
 from . import MicroblazeProgram
 from .compile import preprocess
 from .streams import InterruptMBStream, SimpleMBStream
@@ -24,9 +24,7 @@ from .streams import InterruptMBStream, SimpleMBStream
 _parser = pycparser.CParser()
 _generator = c_generator.CGenerator()
 
-if CPU_ARCH == ZYNQ_ARCH:
-    PTR_OFFSET = "0x20000000"
-elif CPU_ARCH == ZU_ARCH:
+if CPU_ARCH == ZU_ARCH:
     PTR_OFFSET = "0x80000000"
 else:
     PTR_OFFSET = "0x0"
