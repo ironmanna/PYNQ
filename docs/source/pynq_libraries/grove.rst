@@ -70,15 +70,14 @@ SPI          G7, G6
 GPIO         UART, G1 - G7
 ==========   =========================
 
-A list of drivers provided for Grove peripherals can be found in 
-:ref:`pynq-lib-pmod` for the *PYNQ Grove Adapter* and in 
-:ref:`pynq-lib-arduino` for the *PYNQ Shield*.
+A list of drivers provided for Grove peripherals can be found in
+:ref:`pynq-lib-pmod` for the *PYNQ Grove Adapter*.
 
 Examples
 --------
 
-In :ref:`pynqz1-base-overlay`, two Pmod instances are available: PMODA and
-PMODB. After the overlay is loaded, the Grove peripherals can be accessed 
+In :ref:`ZCU104-base-overlay`, two Pmod instances are available: PMOD0 and
+PMOD1. After the overlay is loaded, the Grove peripherals can be accessed
 as follows:
 
 .. code-block:: Python
@@ -89,40 +88,16 @@ as follows:
 
    base = BaseOverlay("base.bit")
 
-   grove_buzzer = Grove_Buzzer(base.PMODB,PMOD_GROVE_G1)
+   grove_buzzer = Grove_Buzzer(base.PMOD0,PMOD_GROVE_G1)
    grove_buzzer.play_melody()
 
 More information about the Grove drivers in the Pmod subpackage, the supported
 peripherals, and APIs can be found in :ref:`pynq-lib-pmod`.
 
-For more examples using the *PYNQ Grove Adapter*, see the notebooks in the 
+For more examples using the *PYNQ Grove Adapter*, see the notebooks in the
 following directory on the board:
 
 .. code-block:: console
 
    <Jupyter Dashboard>/base/pmod/
 
-In :ref:`pynqz1-base-overlay`, one Arduino PYNQ MicroBlaze instance is available. 
-After the overlay is loaded, the Grove peripherals can be accessed as follows:
-
-.. code-block:: Python
-
-   from pynq.overlays.base import BaseOverlay
-   from pynq.lib.arduino import Grove_LEDbar
-   from pynq.lib.arduino import ARDUINO_GROVE_G4
-
-   base = BaseOverlay("base.bit")
-		
-   ledbar = Grove_LEDbar(base.ARDUINO,ARDUINO_GROVE_G4)
-   ledbar.reset()
-
-More information about the Grove drivers in the Arduino subpackage, the 
-supported peripherals, and APIs can be found in :ref:`pynq-lib-arduino`.
-
-For more examples using the *PYNQ Shield*, see the notebooks in the following 
-directory on the board:
-
-.. code-block:: console
-
-   <Jupyter Dashboard>/base/arduino/
-   

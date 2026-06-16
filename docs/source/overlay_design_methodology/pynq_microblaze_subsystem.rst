@@ -94,8 +94,6 @@ The corresponding Python constants are defined here:
 .. code-block:: console
 
    <PYNQ repository>/pynq/lib/pmod/constants.py
-   <PYNQ repository>/pynq/lib/arduino/constants.py
-   <PYNQ repository>/pynq/lib/rpi/constants.py
 
 The following example explains how Python could initiate a read from a 
 peripheral connected to a PYNQ MicroBlaze. 
@@ -253,14 +251,10 @@ project.
 Board Support Package
 ^^^^^^^^^^^^^^^^^^^^^
 
-A Board Support Package (BSP) includes software libraries for peripherals in 
-the system. For example, the Vitis projects for Pmod and Arduino peripherals 
-require the following 2 BSPs:
+A Board Support Package (BSP) includes software libraries for peripherals in
+the system. For example, the Vitis projects for Pmod peripherals
+require the following BSP:
 
-BSP for the Arduino PYNQ MicroBlaze:
-
-    ``<PYNQ repository>/pynq/lib/arduino/bsp_iop_arduino/``
-    
 BSP for the Pmod PYNQ MicroBlaze:
 
     ``<PYNQ repository>/pynq/lib/pmod/bsp_iop_pmod``
@@ -270,11 +264,9 @@ A BSP is specific to a processor subsystem. There can be many BSPs associated
 with an overlay, depending on the types of processors available in the
 system.
 
-An application for the Pmod PYNQ MicroBlaze will be linked to the Pmod PYNQ 
-MicroBlaze BSP. As the two Pmod PYNQ MicroBlazes are identical, an application 
-written for one Pmod PYNQ MicroBlaze can run on the other Pmod PYNQ MicroBlaze. 
-
-An Arduino application will be linked to the Arduino PYNQ MicroBlaze BSP.
+An application for the Pmod PYNQ MicroBlaze will be linked to the Pmod PYNQ
+MicroBlaze BSP. As the two Pmod PYNQ MicroBlazes are identical, an application
+written for one Pmod PYNQ MicroBlaze can run on the other Pmod PYNQ MicroBlaze.
 
 Building the Projects
 ^^^^^^^^^^^^^^^^^^^^^
@@ -282,11 +274,9 @@ Building the Projects
 To build all the software projects, for example,
 you can run the corresponding makefile:
 
-    ``<PYNQ repository>/pynq/lib/arduino/makefile``
-    
     ``<PYNQ repository>/pynq/lib/pmod/makefile``
 
-Application projects for peripherals that ship with PYNQ (e.g. Pmod and Arduino
+Application projects for peripherals that ship with PYNQ (e.g. Pmod
 peripherals) can also be found in the same location. Each project is contained
 in a separate folder.
    

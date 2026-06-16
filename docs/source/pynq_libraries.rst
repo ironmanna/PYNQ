@@ -75,10 +75,8 @@ PYNQ IOPs
 .. toctree::
     :maxdepth: 1
 
-    pynq_libraries/arduino.rst
     pynq_libraries/grove.rst
     pynq_libraries/pmod.rst
-    pynq_libraries/rpi.rst
 
 PynqMicroBlaze
 --------------

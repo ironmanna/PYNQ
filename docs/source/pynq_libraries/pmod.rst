@@ -102,8 +102,8 @@ A list of drivers provided for Pmod peripherals can be found in the
 Examples
 --------
 
-In the :ref:`pynqz1-base-overlay`, two Pmod instances are available: PMODA and
-PMODB. After the overlay is loaded theses instances can be accessed as
+In the :ref:`ZCU104-base-overlay`, two Pmod instances are available: PMOD0 and
+PMOD1. After the overlay is loaded theses instances can be accessed as
 follows:
 
 .. code-block:: Python
@@ -113,7 +113,7 @@ follows:
 
    base = BaseOverlay("base.bit")
 
-   pt = Pmod_Timer(base.PMODA,0)
+   pt = Pmod_Timer(base.PMOD0,0)
    pt.stop()
 
 More information about the Pmod subpackage, its components, and its API can be

@@ -15,9 +15,7 @@ Zynq, Zynq Ultrascale+ and Zynq RFSoC
 
 .. toctree::
     :maxdepth: 1
-       
-    getting_started/pynq_z1_setup.rst
-    getting_started/pynq_z2_setup.rst
+
     getting_started/zcu104_setup.rst
 
 * `AUP-ZU3 <https://xilinx.github.io/AUP-ZU3/getting_started.html>`_

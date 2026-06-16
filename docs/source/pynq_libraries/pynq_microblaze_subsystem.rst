@@ -43,8 +43,8 @@ transfer large data segments between the PS (Python) and the Subsystem.
 Examples
 --------  
 
-In the :ref:`pynqz1-base-overlay`, three IOP instances with PYNQ Microblaze Subsystems
-are available: iop1 (PMODA), iop2 (PMODB), and iop3 (Arduino). After the overlay
+In the :ref:`ZCU104-base-overlay`, two IOP instances with PYNQ Microblaze Subsystems
+are available: iop_pmod0 (PMOD0) and iop_pmod1 (PMOD1). After the overlay
 is loaded these can be accessed as follows:
 
 .. code-block:: Python
@@ -54,14 +54,14 @@ is loaded these can be accessed as follows:
 
    base = BaseOverlay('base.bit')
 
-   mb = PynqMicroblaze(base.iop1.mb_info,
+   mb = PynqMicroblaze(base.iop_pmod0.mb_info,
                        "/home/xilinx/pynq/lib/pmod/pmod_timer.bin")
    mb.reset()
 
 More information about the PynqMicroblaze class, and its API can be found in the
 :ref:`pynq-lib-pynqmicroblaze` section.
 
-:ref:`pmod`, :ref:`Arduino`, and :ref:`Grove` classes are subclasses of the
+:ref:`pmod` and :ref:`Grove` classes are subclasses of the
 PynqMicroBlaze class, and further example notebooks can be found in those
 sections.
 

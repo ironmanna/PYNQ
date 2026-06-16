@@ -1,7 +1,7 @@
 pynq.lib Package
 ================
 
-pynq.lib contains the arduino and pmod subpackages, and additional
+pynq.lib contains the pmod subpackage, and additional
 modules for communicating with other controllers in an overlay.
 
 Modules:
@@ -19,14 +19,11 @@ Modules:
   * :mod:`pynq.lib.wifi` - Implements driver for WiFi
   
 Subpackages:
-  * :ref:`pynq-lib-arduino`- Implements driver for Arduino IO Processor Subsystem
   * :ref:`pynq-lib-pmod` - Implements driver for PMOD IO Processor Subsystem
-  * :ref:`pynq-lib-rpi` - Implements driver for Raspberry Pi IO Processor Subsystem
 
 .. toctree::
     :hidden:
 
-    pynq.lib/pynq.lib.arduino
     pynq.lib/pynq.lib.audio
     pynq.lib/pynq.lib.axigpio
     pynq.lib/pynq.lib.button
@@ -37,7 +34,6 @@ Subpackages:
     pynq.lib/pynq.lib.pmod
     pynq.lib/pynq.lib.pynqmicroblaze
     pynq.lib/pynq.lib.rgbled
-    pynq.lib/pynq.lib.rpi
     pynq.lib/pynq.lib.switch
     pynq.lib/pynq.lib.video
     pynq.lib/pynq.lib.wifi
