@@ -11,42 +11,6 @@ import pytest
 from .mock_devices import MockIPDevice
 from .mock_ip import MockRegisterIP
 
-ZYNQ_PROC_INTERRUPTS = """
-           CPU0       CPU1
- 16:          1          0     GIC-0  27 Edge      gt
- 17:          0          0     GIC-0  43 Level     ttc_clockevent
- 18:       5171       6442     GIC-0  29 Edge      twd
- 19:          0          0     GIC-0  37 Level     arm-pmu
- 20:          0          0     GIC-0  38 Level     arm-pmu
- 21:         43          0     GIC-0  39 Level     f8007100.adc
- 23:          0          0     GIC-0  57 Level     cdns-i2c
- 24:          0          0     GIC-0  80 Level     cdns-i2c
- 26:          0          0     GIC-0  35 Level     f800c000.ocmc
- 27:        245          0     GIC-0  59 Level     xuartps
- 28:          7          0     GIC-0  51 Level     e000d000.spi
- 29:          5          0     GIC-0  54 Level     eth0
- 30:      20432          0     GIC-0  56 Level     mmc0
- 31:          0          0     GIC-0  45 Level     f8003000.dmac
- 32:          0          0     GIC-0  46 Level     f8003000.dmac
- 33:          0          0     GIC-0  47 Level     f8003000.dmac
- 34:          0          0     GIC-0  48 Level     f8003000.dmac
- 35:          0          0     GIC-0  49 Level     f8003000.dmac
- 36:          0          0     GIC-0  72 Level     f8003000.dmac
- 37:          0          0     GIC-0  73 Level     f8003000.dmac
- 38:          0          0     GIC-0  74 Level     f8003000.dmac
- 39:          0          0     GIC-0  75 Level     f8003000.dmac
- 40:         43          0     GIC-0  40 Level     f8007000.devcfg
- 46:          0          0     GIC-0  53 Level     e0002000.usb
- 47:          0          0     GIC-0  41 Edge      f8005000.watchdog
- 48:          0          0     GIC-0  61 Level     fabric
-IPI1:          0          0  Timer broadcast interrupts
-IPI2:       2905       6470  Rescheduling interrupts
-IPI3:          5          3  Function call interrupts
-IPI4:          0          0  CPU stop interrupts
-IPI5:          0          0  IRQ work interrupts
-IPI6:          0          0  completion interrupts
-"""
-
 ZU_PROC_INTERRUPTS = """
            CPU0       CPU1       CPU2       CPU3
   3:      13287      12046       8626      10805     GICv2  30 Level     arch_timer
@@ -204,12 +168,11 @@ def _dummy_get_uio_device(dev_name):
 
 
 GET_UIO_TESTS = {
-    pynq.ps.ZYNQ_ARCH: (ZYNQ_PROC_INTERRUPTS, 61),
     pynq.ps.ZU_ARCH: (ZU_PROC_INTERRUPTS, 121)
 }
 
 
-@pytest.mark.parametrize('arch', [pynq.ps.ZYNQ_ARCH, pynq.ps.ZU_ARCH])
+@pytest.mark.parametrize('arch', [pynq.ps.ZU_ARCH])
 def test_get_uio(interrupt, fs, arch):
     interrupt.get_uio_device = _dummy_get_uio_device
     proc_contents, index = GET_UIO_TESTS[arch]

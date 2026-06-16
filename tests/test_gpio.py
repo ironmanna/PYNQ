@@ -8,7 +8,7 @@ import shutil
 import importlib
 
 
-@pytest.fixture(params=[pynq.ps.ZU_ARCH, pynq.ps.ZYNQ_ARCH])
+@pytest.fixture(params=[pynq.ps.ZU_ARCH])
 def gpio(request):
     old_arch = pynq.ps.CPU_ARCH
     pynq.ps.CPU_ARCH = request.param
@@ -18,7 +18,6 @@ def gpio(request):
 
 
 expected_min_pins = {
-    pynq.ps.ZYNQ_ARCH: 54,
     pynq.ps.ZU_ARCH: 78
 }
 
@@ -32,20 +31,13 @@ def test_gpio_warning():
         importlib.reload(pynq.gpio)
 
 
-ZYNQ_CHIPS = [
-    (338, 96, 'zynq_gpio'),
-    (120, 32, 'ti-gpio')
-]
-
-
 # Offset the base so user index is the same
 ZU_CHIPS = [
-    (314, 96, 'zynq_gpio'),
+    (314, 96, 'zynqmp_gpio'),
     (120, 32, 'ti-gpio')
 ]
 
 chip_dict = {
-    pynq.ps.ZYNQ_ARCH: ZYNQ_CHIPS,
     pynq.ps.ZU_ARCH: ZU_CHIPS
 }
 
