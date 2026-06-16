@@ -26,9 +26,7 @@ libdrm \
 
 DEPENDS += " libdrm boost"
 
-PYNQ_ARCH_arm = "armv7l"
 PYNQ_ARCH_aarch64 = "aarch64"
-CMA_ARCH_arm = "32"
 CMA_ARCH_aarch64 = "64"
 
 SRC_URI = "gitsm://${THISDIR}/../../../../../;usehead=1;protocol=file"

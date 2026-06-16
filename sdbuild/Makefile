@@ -37,9 +37,7 @@ SYSROOT_ROOT := $(CURDIR)/output/sysroot
 BSP_ROOT := $(CURDIR)/output/bsp
 DIST_ROOT := $(CURDIR)/output/dist
 
-KERNEL_arm := zImage
 KERNEL_aarch64 := Image
-BOOT_arm := u-boot.elf zynq_fsbl.elf
 BOOT_aarch64 := u-boot.elf zynqmp_fsbl.elf pmufw.elf bl31.elf
 
 export CCACHEDIR
@@ -124,9 +122,6 @@ REMOTE_ROOT_$1 := $$(BUILD_ROOT)/$1.remote_rootfs.tar.gz
 SYSROOT_$1 := $$(SYSROOT_ROOT)/$1
 EXTRA_BOOT_$1 := $$(BUILD_ROOT)/$1.extra_boot
 
-ifeq ($$(ARCH_$1),arm)
-	TEMPLATE_$1 := zynq
-endif
 ifeq ($$(ARCH_$1),aarch64)
 	TEMPLATE_$1 := zynqMP
 endif
@@ -483,7 +478,6 @@ endif
 	vivado -version | fgrep ${KERNEL_VERSION}
 	vitis -version | fgrep ${KERNEL_VERSION}
 	which petalinux-config
-	which arm-linux-gnueabihf-gcc
 	which microblaze-xilinx-elf-gcc
 	which ct-ng
 	bash $(SCRIPT_DIR)/check_env.sh

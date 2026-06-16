@@ -11,7 +11,6 @@ prune boards/*/petalinux_bsp
 prune boards/*/packages
 prune boards/*/*/vivado
 prune boards/*/*/base
-prune boards/*/*/logictools
 prune boards/*/*/NA
 
 recursive-exclude boards/*/* makefile
