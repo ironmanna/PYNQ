@@ -25,7 +25,7 @@ $(BASE_BSP):
 	rm -rf boards/sw_repo/*/*/*/*/*/code
 	rm -rf boards/sw_repo/*/*/*/*/*/libsrc
 
-	cp -rf boards/sw_repo/bsp_iop_pmod0/iop_pmod0/standalone_domain/bsp pynq/lib/pmod/bsp_iop_pmod
+	cp -rf boards/sw_repo/bsp_iop_pmod0_mb/iop_pmod0_mb/standalone_domain/bsp pynq/lib/pmod/bsp_iop_pmod
 
 	cd pynq/lib/pmod && make && make clean
 	cd boards/sw_repo && make clean
